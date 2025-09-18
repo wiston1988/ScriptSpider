@@ -16,7 +16,6 @@ import com.github.xjtushilei.utils.TimeSleep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -44,7 +43,7 @@ public class Spider {
      * 最多几个爬虫在进行。
      * 默认5个。
      *
-     * @param threadNum
+     * @param threadNum 线程数量
      * @return 自己
      */
     public Spider thread(int threadNum) {
@@ -90,7 +89,7 @@ public class Spider {
     /**
      * 添加初始化种子，可以多个
      *
-     * @param url
+     * @param url url
      * @return Spider
      */
     public Spider addUrlSeed(String url) {
@@ -193,13 +192,9 @@ public class Spider {
             pageProcessor.process(nowPage);
             //正则处理
             List<UrlSeed> urlSeedList = nowPage.links();
-            for (Iterator<UrlSeed> it = urlSeedList.iterator(); it.hasNext(); ) {
-                UrlSeed seed = it.next();
-                if (!regexRule.regex(seed.getUrl())) {
-                    //                    System.out.println(seed.getUrl());
-                    it.remove();
-                }
-            }
+            //                    System.out.println(seed.getUrl());
+            urlSeedList.removeIf(seed -> !regexRule.regex(seed.getUrl()));
+
             nowPage.setNewUrlSeed(urlSeedList);
             pageProcessor.processNewUrlSeeds(nowPage);
 

@@ -23,7 +23,7 @@ public class PriorityQueueSpider {
                 .setSaver(mySaver)
                 .setProcessor(myPageProcessor)
                 .thread(10)
-                .addUrlSeed("http://news.xjtu.edu.cn/zsjy.htm")
+                .addUrlSeed("http://news.xjtu.edu.cn/rcpy.htm")
                 .addRegexRule("+http://news.xjtu.edu.cn/.*") //限制爬取《交大新闻网》以外的其他站点的信息
                 .run();
     }
@@ -35,11 +35,10 @@ public class PriorityQueueSpider {
      */
     static Saver mySaver = new Saver() {
         @Override
-        public Page save(Page page) {
+        public void save(Page page) {
             Map<Object, Object> map = page.getItems();
             System.out.print(page.getUrlSeed().getPriority());
             map.forEach((k, v) -> System.out.println(k + " : " + v));
-            return page;
         }
     };
 
@@ -51,17 +50,17 @@ public class PriorityQueueSpider {
     static PageProcessor myPageProcessor = new PageProcessor() {
 
         @Override
-        public Page process(Page page) {
+        public void process(Page page) {
 
             //如果不匹配，则不进行解析！
             if (!Pattern.matches("http://news.xjtu.edu.cn/info/.*htm", page.getUrlSeed().getUrl())) {
-                return page;
+                return;
             }
 
             Document htmldoc = page.getDocument();
             //select返回的是一个数组，所以需要first，相关语法请google“jsoup select语法”和“cssquery”
             try {
-                String title = htmldoc.select(".d_title").first().text();
+                String title = htmldoc.select(".ssd").first().text();
 
                 //用来存放爬取到的信息，供之后存储！map类型的即可，可以自定义各种嵌套！
                 Map<String, String> items = new HashMap<String, String>();
@@ -72,29 +71,28 @@ public class PriorityQueueSpider {
             } catch (NullPointerException e) {
                 System.out.println("该页面没有解析到相关东西！跳过");
             }
-            return page;
         }
 
         /**
          * 这里进行了优先级的用法示范。
          *
-         * 比如，你想在“交大新闻网”尽快或者优先爬取“招生就业”类型的新闻。
-         * 然后我们发现，这一类新闻的url符合 “http://newsxq.xjtu.edu.cn/info/1006/.*”
+         * 比如，你想在“交大新闻网”尽快或者优先爬取“人才培养”类型的新闻。
+         * 然后我们发现，这一类新闻的url符合 “http://news.xjtu.edu.cn/info/1003/.*”
          *
          */
         @Override
-        public Page processNewUrlSeeds(Page page) {
+        public void processNewUrlSeeds(Page page) {
 
-            //招生就业模块，符合 “http://newsxq.xjtu.edu.cn/info/1006/.*htm” 或者“http://news.xjtu.edu.cn/zsjy/.*htm”（翻页时候的url），进行设置高优先级设置
+            //人才培养模块，符合 “http://news.xjtu.edu.cn/info/1006/.*htm” 或者“http://news.xjtu.edu.cn/rcpy/.*htm”（翻页时候的url），进行设置高优先级设置
             page.getNewUrlSeed().forEach(urlSeed -> {
-                if (Pattern.matches("http://news.xjtu.edu.cn/zsjy.*htm", urlSeed.getUrl()) || Pattern.matches("http://news.xjtu.edu.cn/info/1006/.*htm", urlSeed.getUrl())) {
+                if (Pattern.matches("http://news.xjtu.edu.cn/rcpy.*htm", urlSeed.getUrl()) || Pattern.matches("http://news.xjtu.edu.cn/info/1003/.*htm", urlSeed.getUrl())) {
                     urlSeed.setPriority(8);
                 }
             });
 
-            //综合新闻 板块 ，符合“http://newsxq.xjtu.edu.cn/info/1002/.*htm” 或者"http://news.xjtu.edu.cn/zhxw.htm"(翻页时候的url），进行设置低优先级设置
+            //要闻聚焦 板块 ，符合“http://news.xjtu.edu.cn/info/1002/.*htm” 或者"http://news.xjtu.edu.cn/ywjj.htm"(翻页时候的url），进行设置低优先级设置
             page.getNewUrlSeed().forEach(urlSeed -> {
-                if (Pattern.matches("http://news.xjtu.edu.cn/zhxw.*htm", urlSeed.getUrl()) || Pattern.matches("http://news.xjtu.edu.cn/info/1002/.*htm", urlSeed.getUrl())) {
+                if (Pattern.matches("http://news.xjtu.edu.cn/ywjj.*htm", urlSeed.getUrl()) || Pattern.matches("http://news.xjtu.edu.cn/info/1002/.*htm", urlSeed.getUrl())) {
                     urlSeed.setPriority(2);
                 }
             });
@@ -103,7 +101,6 @@ public class PriorityQueueSpider {
 
             //优先级设置完之后，该页面新的url种子再进入待爬取队列的时候，就会自动进入优先队列！
 
-            return page;
         }
     };
 

@@ -23,10 +23,9 @@ public class TextPageProcessor implements PageProcessor {
      * process函数需要完成的有：
      * 1.解析有用的信息，丢进去Page的List items中。之后save会进行存储！
      *
-     * @param page
-     * @return 自己
+     * @param page page
      */
-    public Page process(Page page) {
+    public void process(Page page) {
         Document doc = page.getDocument();
 
         String title = doc.title();
@@ -37,8 +36,6 @@ public class TextPageProcessor implements PageProcessor {
         items.put("url", page.getUrlSeed().getUrl());
 
         page.setItems(items);
-
-        return page;
     }
 
 
@@ -46,12 +43,9 @@ public class TextPageProcessor implements PageProcessor {
      * url进行处理！建议功能：在这里进行新种子的优先级的调整！
      * 这里没有进行任何特殊的处理！ 因为我们推荐你使用正则处理（默认实现，在spider初始化的时候进行添加）！
      *
-     * @param page
-     * @return 自己
+     * @param page page
      */
-    public Page processNewUrlSeeds(Page page) {
+    public void processNewUrlSeeds(Page page) {
 
-
-        return page;
     }
 }

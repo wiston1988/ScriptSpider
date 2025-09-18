@@ -41,18 +41,18 @@ public class SimpleSpider {
     static PageProcessor myPageProcessor = new PageProcessor() {
 
         @Override
-        public Page process(Page page) {
+        public void process(Page page) {
 
             //如果不匹配，则不进行解析！
             if (!Pattern.matches("http://news.xjtu.edu.cn/info/.*htm", page.getUrlSeed().getUrl())) {
-                return page;
+                return;
             }
 
             Document htmldoc = page.getDocument();
             //select返回的是一个数组，所以需要first，相关语法请google“jsoup select语法”和“cssquery”
             try {
-                String title = htmldoc.select(".d_title").first().text();
-                String text = htmldoc.select(".d_detail").first().text();
+                String title = htmldoc.select(".ssd").first().text();
+                String text = htmldoc.select(".v_news_content").first().text();
 
                 //用来存放爬取到的信息，供之后存储！map类型的即可，可以自定义各种嵌套！
                 Map<String, String> items = new HashMap<String, String>();
@@ -66,19 +66,8 @@ public class SimpleSpider {
                 System.out.println("没有解析到相关东西！跳过");
             }
 
-
-            return page;
         }
 
-        /**
-         * 如果你自己想处理url(之前已经经过了正则过滤,或者初始化的时候不添加正则信息 !)，这里可以自己增加自己的方法（除了正则，因为已经默认实现了正则，除非你想在这里再次实现也没有关系）！
-         * @param page
-         * @return 自己
-         */
-        @Override
-        public Page processNewUrlSeeds(Page page) {
-            return page;
-        }
     };
 
     /**
@@ -91,7 +80,7 @@ public class SimpleSpider {
     static Saver mySaver = new Saver() {
 
         @Override
-        public Page save(Page page) {
+        public void save(Page page) {
             //结果不为空就存储！
             if (page.getItems().size() != 0) {
                 try {
@@ -117,7 +106,6 @@ public class SimpleSpider {
                 }
 
             }
-            return page;
         }
     };
 }

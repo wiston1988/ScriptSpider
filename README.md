@@ -20,15 +20,17 @@ ScriptSpider（以下简称SS），做一个好用的爬虫框架。
 - 易理解（中文注释，多样例代码）
 - 易用性（最短一行代码就可以开始爬虫）
 - 代码少（已经默认实现了大部分功能）
-- 基于Jsoup（个人化解析网页方便）
+- 基于Jsoup（个性化解析网页方便）
 - 高度扩展性（热插拔组件，可定制每一个流程）
 - 速度快（多线程爬虫，线程池管理，线程池下载，分布式）
-- 分布式（基于redis，mq等，部署简单，速度很快）【部分待完成】
-- 反爬虫（模拟浏览器，随机userAgent）【部分待完成】
-- 代理（自动切换代理）【待完成】
-- 监控（分布式监控）【待完成】
-- 故障重爬（断电，宕机后继续爬取）【待完成】
-- 未完待续
+- 分布式（基于redis，mq等，部署简单，速度很快）
+
+
+# 使用情况
+
+近12个月maven中央仓库使用情况。
+
+![近12个月maven中央仓库使用情况](https://www.xjtushilei.com/images/github/ScriptSpider/1.png)
 
 # 安装
 
@@ -39,8 +41,8 @@ ScriptSpider（以下简称SS），做一个好用的爬虫框架。
 <dependency>
     <groupId>com.github.xjtushilei</groupId>
     <artifactId>scriptspider</artifactId>
-    <version>0.2</version>
-    <!--请尽量使用最新版本-->
+    <version>0.3</version>
+    <!--请尽量使用最新版本. update time：2018年3月29日18:37:44-->
 </dependency>
 ```
 
